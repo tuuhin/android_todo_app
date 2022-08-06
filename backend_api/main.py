@@ -1,6 +1,4 @@
-from datetime import datetime
 from fastapi import Depends, FastAPI, Response, Request
-from pydantic import Field
 from sqlalchemy.orm import Session
 from fastapi import status
 from app.database import LocalSession, engine, Base

@@ -1,4 +1,3 @@
-from xmlrpc.client import Boolean
 from sqlalchemy.orm import Session
 from .schema import ItemCreate, ItemDelete
 from .entity import Item
@@ -14,8 +13,9 @@ def get_items(
 
 
 def create_new_item(
-    db: Session, item: ItemCreate,
-    datetime: datetime = datetime.now
+    db: Session,
+    item: ItemCreate,
+    datetime: datetime = datetime.now()
 ):
     db_item = Item(**item.dict(), created_at=datetime)
     db.add(db_item)
@@ -27,7 +27,7 @@ def create_new_item(
 def delete_item(
     db: Session,
     item: ItemDelete
-) -> Boolean:
+) -> bool:
     item_exits = db.query(Item).filter_by(**item.dict()).first()
     if item_exits:
         db.delete(item_exits)
