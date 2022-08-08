@@ -13,4 +13,4 @@ class Item(Base):
     is_completed = Column(Boolean, default=False)
 
     def __repr__(self) -> str:
-        return f"{self.id}: {self.title}"
+        return f"{self.id}: {self.title} -> {self.is_completed}"

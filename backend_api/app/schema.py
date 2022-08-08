@@ -17,9 +17,10 @@ class Item(ItemBase):
     created_at: datetime
 
 
+class ItemUpdate(BaseModel):
+    id: int
+    is_completed: bool
+
+
 class ItemCreate(ItemBase):
     pass
-
-
-class ItemDelete(BaseModel):
-    id: int

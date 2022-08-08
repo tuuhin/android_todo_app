@@ -13,7 +13,7 @@ def get_env_vars():
 def create_database_engine():
     settings = get_env_vars()
 
-    SQLALCHEMY_DATABASE_URL_SQLITE = "sqlite:///./sql_app.db"
+    # SQLALCHEMY_DATABASE_URL_SQLITE = "sqlite:///./sql_app.db"
     SQLALCHEMY_DATABASE_URL_POSTGRESS = f'postgresql://{settings.user}:{settings.password}@{settings.host}/{settings.database}'
     engine = create_engine(
         SQLALCHEMY_DATABASE_URL_POSTGRESS,
