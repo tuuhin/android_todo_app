@@ -1,24 +1,27 @@
 package com.example.android_todo_app.presentation.screens
 
+
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.android_todo_app.presentation.navigation.BottomNavigation
-import com.example.android_todo_app.presentation.navigation.CompletedTodoTab
-import com.example.android_todo_app.presentation.navigation.IncompleteTodoTab
+import com.example.android_todo_app.presentation.navigation.*
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 
+
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun AllToDoRoute(
-    navController: NavController
+fun ViewTodos(
+    navController: NavController,
 ) {
-    val pagerState = rememberPagerState(pageCount = 2)
+    val pagerState = rememberPagerState(pageCount = 3)
     Scaffold(
         bottomBar = { BottomNavigation(pagerState) },
         floatingActionButton = {
@@ -36,10 +39,11 @@ fun AllToDoRoute(
 
     )
     {
-        HorizontalPager(state = pagerState) { page ->
+        HorizontalPager(state = pagerState, modifier = Modifier.padding(it)) { page ->
             when(page){
-                0 -> CompletedTodoTab()
-                1 -> IncompleteTodoTab()
+                0 -> AllTodoTab()
+                1-> CompletedTodoTab()
+                2 -> IncompleteTodoTab()
             }
         }
     }

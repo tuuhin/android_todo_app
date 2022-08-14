@@ -10,4 +10,8 @@ import com.example.android_todo_app.data.local.entity.ToDoEntity
 @TypeConverters(Adapters::class)
 abstract class AppDataBase : RoomDatabase(){
     abstract fun todoDao(): ToDoDao
+
+    companion object{
+       const val  DATABASE_NAME :String ="my_db"
+    }
 }

@@ -7,8 +7,7 @@ import java.util.*
 
 @Entity
 data class ToDoEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int? = null,
+    @PrimaryKey(autoGenerate = false) val id: Int,
     val title: String,
     val desc: String?,
     val createdAt: Date,
@@ -16,6 +15,7 @@ data class ToDoEntity(
 ){
     fun toModel():ToDoModel{
         return ToDoModel(
+            id = id,
             title = title,
             desc=desc,
             createdAt = createdAt,

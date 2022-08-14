@@ -29,19 +29,31 @@ fun BottomNavigation(
                }
            },
            icon = { Icon(imageVector = Icons.Default.PlaylistAdd, contentDescription = "add ") },
-           label = { Text(text = "All Todo's")}
+           label = { Text(text = "All")}
 
        )
         BottomNavigationItem(
-            selected = pagerState.currentPage==1,
             selectedContentColor = MaterialTheme.colors.primary,
+            selected = pagerState.currentPage==1,
             onClick = {
                 scope.launch {
                     pagerState.animateScrollToPage(1)
                 }
             },
+            icon = { Icon(imageVector = Icons.Default.PlaylistAdd, contentDescription = "add ") },
+            label = { Text(text = "Completed")}
+
+        )
+        BottomNavigationItem(
+            selected = pagerState.currentPage==2,
+            selectedContentColor = MaterialTheme.colors.primary,
+            onClick = {
+                scope.launch {
+                    pagerState.animateScrollToPage(2)
+                }
+            },
             icon = { Icon(imageVector = Icons.Default.Schedule, contentDescription = "add ") },
-            label = { Text(text = "Incompled Todo's")}
+            label = { Text(text = "Incomplete")}
         )
        
     }

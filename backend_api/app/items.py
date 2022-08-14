@@ -13,6 +13,26 @@ def get_items(
     return db.query(Item).order_by(Item.id.desc()).offset(skip).limit(limit).all()
 
 
+def get_completed_items(
+    db: Session,
+    skip: int = 0,
+    limit: int = 0
+) -> list[Item]:
+    return db.query(Item).filter(
+        Item.is_completed == True
+    ).order_by(Item.id.desc()).offset(skip).limit(limit).all()
+
+
+def get_incomplted_items(
+    db: Session,
+    skip: int = 0,
+    limit: int = 0
+) -> list[Item]:
+    return db.query(Item).filter(
+        Item.is_completed == False
+    ).order_by(Item.id.desc()).offset(skip).limit(limit).all()
+
+
 def create_new_item(
     db: Session,
     item: ItemCreate,
@@ -31,7 +51,6 @@ def update_old_item(
 ) -> Union[Item, None]:
     old_item: Item = db.query(Item).get(item.id)
     if old_item:
-        print(old_item)
         old_item.is_completed = item.is_completed
         db.commit()
         db.refresh(old_item)

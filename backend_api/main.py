@@ -1,10 +1,12 @@
 from typing import Union
-from fastapi import Depends, FastAPI, Response, Request, Path, Query, Body, status, HTTPException
+from fastapi import (Depends, FastAPI, Response, Request,
+                     Path, Query, Body, status, HTTPException)
 from sqlalchemy.orm import Session
 from fastapi.responses import ORJSONResponse
 from app.database import LocalSession, engine, Base
 from app.schema import Item, ItemCreate, ItemUpdate
-from app.items import create_new_item, delete_item, get_items, update_old_item
+from app.items import (create_new_item, delete_item, get_completed_items,
+                       get_incomplted_items, get_items, update_old_item)
 
 Base.metadata.create_all(bind=engine)
 
@@ -19,7 +21,7 @@ async def db_session_middleware(
     response = Response("Internal server error",
                         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
     try:
-        request.state.db = LocalSession()
+        request.state.db: Session = LocalSession()
         response = await call_next(request)
     finally:
         request.state.db.close()
@@ -27,12 +29,17 @@ async def db_session_middleware(
 
 
 # Dependency
-def get_db(request: Request):
-    return request.state.db
+def get_db(request: Request): return request.state.db
 
 
 @app.get("/items", response_model=list[Item], status_code=status.HTTP_200_OK)
 def read_items_route(
+    completed: Union[bool, None] = Query(
+        default=None,
+        alias="checked",
+        title="Completed",
+        description="Get completed items"
+    ),
     skip: Union[int, None] = Query(
         default=None,
         alias='items-offset',
@@ -47,6 +54,10 @@ def read_items_route(
         ge=0),
     db: Session = Depends(get_db)
 ):
+    if completed is True:
+        return get_completed_items(db, skip=skip, limit=limit)
+    if completed is False:
+        return get_incomplted_items(db, skip=skip, limit=limit)
     return get_items(db, skip=skip, limit=limit)
 
 

@@ -1,6 +1,7 @@
 package com.example.android_todo_app.di
 
 import android.app.Application
+import android.util.Log
 import androidx.room.Room
 import com.example.android_todo_app.data.local.Adapters
 import com.example.android_todo_app.data.local.AppDataBase
@@ -21,30 +22,29 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideDatabase(app:Application): AppDataBase = Room.databaseBuilder(
-        app,
-        AppDataBase::class.java,
-        "my_db"
-    ).addTypeConverter(Adapters())
-        .build()
+    fun provideDatabase(app:Application): AppDataBase {
+        return Room.databaseBuilder(app, AppDataBase::class.java, AppDataBase.DATABASE_NAME)
+            .addTypeConverter(Adapters())
+            .build()
+    }
 
 
     @Provides
     @Singleton
-    fun provideRetrofit(): ToDoApi = Retrofit
-        .Builder()
-        .baseUrl(ToDoApi.BASE_URL)
-        .addConverterFactory(MoshiConverterFactory.create())
-        .build()
-        .create(ToDoApi::class.java)
+    fun provideRetrofit(): ToDoApi {
+        return Retrofit
+            .Builder()
+            .baseUrl(ToDoApi.BASE_URL)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+            .create(ToDoApi::class.java)
+    }
 
 
     @Provides
     @Singleton
-    fun provideToDoRepository(api:ToDoApi,db:AppDataBase):ToDoRepository =
-        TodoRepositoryImplementation(
-        api,
-        db.todoDao()
-    )
+    fun provideToDoRepository(api:ToDoApi,db:AppDataBase):ToDoRepository {
+       return  TodoRepositoryImplementation(api, db.todoDao())
+    }
 
 }

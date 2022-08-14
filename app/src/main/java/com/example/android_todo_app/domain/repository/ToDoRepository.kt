@@ -8,10 +8,14 @@ interface ToDoRepository {
 
     suspend fun getAllTodos():Flow<Resource<List<ToDoModel>>>
 
-    suspend fun getAllIncompletedTodos():Flow<Resource<List<ToDoModel>>>
+    suspend fun getAllInCompletedTodos():Flow<Resource<List<ToDoModel>>>
 
     suspend fun  getAllCompletedTodos():Flow<Resource<List<ToDoModel>>>
 
     suspend fun addTodo(todo:ToDoModel):Resource<ToDoModel>
+
+    suspend fun deleteTodo(todo: ToDoModel):Resource<ToDoModel>
+
+    suspend fun updateTodo(todo: ToDoModel):Resource<ToDoModel>
 
 }
