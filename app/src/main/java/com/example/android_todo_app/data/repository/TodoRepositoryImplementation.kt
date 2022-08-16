@@ -49,6 +49,34 @@ class TodoRepositoryImplementation(
     override suspend fun getAllInCompletedTodos(): Flow<Resource<List<ToDoModel>>> {
         return flow {
             emit(Resource.Loading())
+            val getInCompletedTodosInDb: List<ToDoModel> =
+                db.getInCompletedToDos().map { it.toModel() }
+            try {
+                val getCompletedTodos: List<ToDoModel> = api.getCompletedTodo(isCompleted = false).map { it.toModel() }
+                emit(Resource.Success(data = getCompletedTodos))
+            } catch (e: HttpException) {
+                emit(
+                    Resource.Error(
+                        message = "Can't connect to the server",
+                        data = getInCompletedTodosInDb
+                    )
+                )
+            } catch (e: IOException) {
+                emit(
+                    Resource.Error(
+                        message = "Io exception occurred",
+                        data = getInCompletedTodosInDb
+                    )
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    override suspend fun getAllCompletedTodos(): Flow<Resource<List<ToDoModel>>> {
+        return flow {
+            emit(Resource.Loading())
             val getCompletedTodosInDb: List<ToDoModel> =
                 db.getInCompletedToDos().map { it.toModel() }
             try {
@@ -74,10 +102,6 @@ class TodoRepositoryImplementation(
         }
     }
 
-    override suspend fun getAllCompletedTodos(): Flow<Resource<List<ToDoModel>>> {
-        TODO("Not yet implemented")
-    }
-
     override suspend fun createTodo(todo: CreateTodoModel): Resource<ToDoModel> {
         return try {
             val addTodo: ToDoModel = api.addToDo(todo.toDto()).toModel()
@@ -89,7 +113,7 @@ class TodoRepositoryImplementation(
             Resource.Error(message = "IO Exception occurred")
         } catch (e: Exception) {
             e.printStackTrace()
-            Resource.Error(message = "Unknown exception occured")
+            Resource.Error(message = "Unknown exception occurred")
         }
     }
 
