@@ -10,13 +10,13 @@ import com.example.android_todo_app.data.local.entity.ToDoEntity
 interface ToDoDao {
 
     @Query("SELECT * FROM ToDoEntity")
-    suspend fun getAllToDos() : List<ToDoEntity>
+    suspend fun getAllToDos(): List<ToDoEntity>
 
     @Query("SELECT * FROM ToDoEntity WHERE isCompleted=1")
-    suspend fun getAllCompletedToDos():List<ToDoEntity>
+    suspend fun getAllCompletedToDos(): List<ToDoEntity>
 
     @Query("SELECT * FROM ToDoEntity WHERE isCompleted=0")
-    suspend fun getInCompletedToDos():List<ToDoEntity>
+    suspend fun getInCompletedToDos(): List<ToDoEntity>
 
     @Query("DELETE FROM ToDoEntity WHERE id IN (:todosIds) ")
     suspend fun deleteTodos(todosIds: List<Int>)
@@ -24,7 +24,7 @@ interface ToDoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addToDo(todo: ToDoEntity)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addTodos(todos:List<ToDoEntity>)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun addTodos(todos: List<ToDoEntity>)
 
 }

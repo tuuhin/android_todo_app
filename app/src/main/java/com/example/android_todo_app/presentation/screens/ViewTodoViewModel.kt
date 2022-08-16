@@ -21,27 +21,31 @@ data class TodoState<T>(
 
 @HiltViewModel
 class ViewTodoViewModel @Inject constructor(
-    private  val todoRepository:ToDoRepository
-):ViewModel() {
+    private val todoRepository: ToDoRepository
+) : ViewModel() {
 
     private val _eventFlow = MutableSharedFlow<UIEvent>()
-    private  val _allTodos = mutableStateOf<List<ToDoModel>>(emptyList())
+    private val _allTodos = mutableStateOf<List<ToDoModel>>(emptyList())
 
-    val allTodos :State<List<ToDoModel>> = _allTodos
+    val allTodos: State<List<ToDoModel>> = _allTodos
 
     val eventFlow = _eventFlow.asSharedFlow()
 
-    private fun getToDo(){
+    private fun getToDo() {
         viewModelScope.launch {
-            todoRepository.getAllTodos().onEach { result->
-                when(result){
-                    is Resource.Success ->{
-                        _allTodos.value = result.data?: emptyList()
+            todoRepository.getAllTodos().onEach { result ->
+                when (result) {
+                    is Resource.Success -> {
+                        _allTodos.value = result.data ?: emptyList()
                     }
-                    is Resource.Error ->{
-                        _eventFlow.emit(UIEvent.ShowSnackbar(result.message?:"Unknown Error Occur"))
+                    is Resource.Error -> {
+                        _eventFlow.emit(
+                            UIEvent.ShowSnackbar(
+                                result.message ?: "Unknown Error Occur"
+                            )
+                        )
                     }
-                    is Resource.Loading ->{
+                    is Resource.Loading -> {
 
                     }
                 }
@@ -49,7 +53,7 @@ class ViewTodoViewModel @Inject constructor(
         }
     }
 
-    sealed class UIEvent{
-        data class ShowSnackbar(val message:String):UIEvent()
+    sealed class UIEvent {
+        data class ShowSnackbar(val message: String) : UIEvent()
     }
 }

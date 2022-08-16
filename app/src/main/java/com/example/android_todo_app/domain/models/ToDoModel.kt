@@ -2,17 +2,18 @@ package com.example.android_todo_app.domain.models
 
 import com.example.android_todo_app.data.local.entity.ToDoEntity
 import com.example.android_todo_app.data.remote.dto.ToDoDto
-import java.util.*
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 data class ToDoModel(
-    val id:Int,
-    val title:String,
-    val desc:String?,
-    val isCompleted:Boolean,
-    val createdAt : Date
-    ){
+    val id: Int,
+    val title: String,
+    val desc: String?,
+    val isCompleted: Boolean,
+    val createdAt: LocalDateTime
+) {
 
-    fun toEntity():ToDoEntity=ToDoEntity(
+    fun toEntity(): ToDoEntity = ToDoEntity(
         id = id,
         title = title,
         desc = desc,
@@ -20,11 +21,11 @@ data class ToDoModel(
         createdAt = createdAt
     )
 
-    fun toDto():ToDoDto = ToDoDto(
+    fun toDto(): ToDoDto = ToDoDto(
         id = id,
-        title=title,
-        desc=desc,
-        createdAt = createdAt,
+        title = title,
+        desc = desc,
+        createdAt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSZ").format(createdAt),
         isCompleted = isCompleted
     )
 

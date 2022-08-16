@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun IncompleteTodoTab() {
-    Box(modifier = Modifier.fillMaxSize()){
+    Box(modifier = Modifier.fillMaxSize()) {
         Text("hello")
     }
 }
