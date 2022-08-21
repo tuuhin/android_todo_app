@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,18 +41,20 @@ fun IncompleteTodoTab() {
                     )
                 }
             }
+
             LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
+                modifier = Modifier.fillMaxSize()
             ) {
                 items(viewModel.todoState.value.todos.size) { idx ->
                     val todo = viewModel.todoState.value.todos[idx]
                     ToDoCard(
                         title = todo.title,
-                        description = todo.title,
+                        description = todo.desc,
                         date = todo.createdAt,
                         isCompleted = todo.isCompleted,
-                        onTap = {},
+                        onTap = { viewModel.updateTodo(todo) },
+                        onDelete = { viewModel.deleteTodo(todo.id) }
+
                     )
                 }
 

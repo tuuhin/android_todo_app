@@ -41,6 +41,7 @@ class TodoRepositoryImplementation(
                 )
             } catch (e: Exception) {
                 e.printStackTrace()
+                emit(Resource.Error(message = "Unknown Exception Occurred "))
             }
 
         }
@@ -52,7 +53,8 @@ class TodoRepositoryImplementation(
             val getInCompletedTodosInDb: List<ToDoModel> =
                 db.getInCompletedToDos().map { it.toModel() }
             try {
-                val getCompletedTodos: List<ToDoModel> = api.getCompletedTodo(isCompleted = false).map { it.toModel() }
+                val getCompletedTodos: List<ToDoModel> =
+                    api.getCompletedTodo(isCompleted = false).map { it.toModel() }
                 emit(Resource.Success(data = getCompletedTodos))
             } catch (e: HttpException) {
                 emit(
@@ -70,6 +72,7 @@ class TodoRepositoryImplementation(
                 )
             } catch (e: Exception) {
                 e.printStackTrace()
+                emit(Resource.Error(message = "Unknown Exception Occurred "))
             }
         }
     }
@@ -78,7 +81,7 @@ class TodoRepositoryImplementation(
         return flow {
             emit(Resource.Loading())
             val getCompletedTodosInDb: List<ToDoModel> =
-                db.getInCompletedToDos().map { it.toModel() }
+                db.getAllCompletedToDos().map { it.toModel() }
             try {
                 val getCompletedTodos: List<ToDoModel> = api.getCompletedTodo().map { it.toModel() }
                 emit(Resource.Success(data = getCompletedTodos))
@@ -98,6 +101,7 @@ class TodoRepositoryImplementation(
                 )
             } catch (e: Exception) {
                 e.printStackTrace()
+                emit(Resource.Error(message = "Unknown Exception Occurred "))
             }
         }
     }
@@ -117,12 +121,36 @@ class TodoRepositoryImplementation(
         }
     }
 
-    override suspend fun deleteTodo(todo: ToDoModel): Resource<ToDoModel> {
-        TODO("Not yet implemented")
+    override suspend fun deleteTodo(todoId: Int): Resource<Int> {
+        return try {
+            db.deleteTodoById(todoId)
+            api.deleteTodo(todoId)
+            Resource.Success(data = 1)
+        } catch (e: HttpException) {
+            Resource.Error(message = e.message ?: "")
+        } catch (e: IOException) {
+            Resource.Error(message = "IO Exception Occurred")
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Error(message = "Unknown Error occurred")
+        }
     }
 
     override suspend fun updateTodo(todo: ToDoModel): Resource<ToDoModel> {
-        TODO("Not yet implemented")
+        return try {
+            api.updateTodo(todo.toUpdateDto())
+            db.updateTodo(todo.toEntity())
+            val localUpdatedTodo = db.getTodoById(todo.id).toModel()
+            Resource.Success(data = localUpdatedTodo)
+        } catch (e: HttpException) {
+            Resource.Error(message = e.message ?: "Http exception occurred ")
+        } catch (e: IOException) {
+            e.printStackTrace()
+            Resource.Error(message = "IO exception")
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Error(message = "Unknown Error Occurred ")
+        }
     }
 
 }

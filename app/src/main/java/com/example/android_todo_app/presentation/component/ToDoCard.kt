@@ -3,11 +3,11 @@ package com.example.android_todo_app.presentation.component
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.RadioButton
-import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontStyle
@@ -24,13 +24,11 @@ fun ToDoCard(
     date: LocalDateTime,
     isCompleted: Boolean,
     enabled: Boolean? = false,
-    onTap: () -> Unit
+    onTap: () -> Unit,
+    onDelete: () -> Unit
 ) {
     val formatter = remember {
         DateTimeFormatter.ofPattern("EEE, d MMM yyyy HH:mm")
-    }
-    var selected by remember {
-        mutableStateOf(isCompleted)
     }
     Card(
         modifier = Modifier
@@ -50,15 +48,21 @@ fun ToDoCard(
                 .fillMaxWidth()
                 .padding(10.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Top
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Column {
+            Column(
+                modifier = Modifier.weight(.7f)
+            ) {
                 Text(
                     title,
                     style = MaterialTheme.typography.h6,
                     overflow = TextOverflow.Ellipsis,
+                    maxLines = 1
                 )
-                Spacer(modifier = Modifier.height(2.dp))
+                Spacer(
+                    modifier = Modifier
+                        .height(2.dp)
+                )
                 description?.let {
                     Text(
                         description,
@@ -71,10 +75,23 @@ fun ToDoCard(
                     text = date.format(formatter),
                 )
             }
+            Spacer(modifier = Modifier.weight(0.05f))
             RadioButton(
-                selected = selected,
-                onClick = { selected = !selected }
+                modifier = Modifier.weight(.1f),
+                selected = isCompleted,
+                onClick = onTap
             )
+            Spacer(modifier = Modifier.weight(0.05f))
+            IconButton(
+                modifier = Modifier.weight(.1f),
+                onClick = onDelete
+            ) {
+                Icon(
+                    Icons.Outlined.Delete,
+                    contentDescription = "Delete This Item",
+                    tint = MaterialTheme.colors.primary
+                )
+            }
         }
     }
 }

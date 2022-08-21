@@ -7,6 +7,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.ButtonDefaults.elevation
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -15,11 +17,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.flow.collectLatest
+
 
 @Composable
 fun CreateToDo(
@@ -35,7 +39,26 @@ fun CreateToDo(
 
     Scaffold(
         scaffoldState = scaffoldState,
-        backgroundColor = MaterialTheme.colors.background
+        backgroundColor = MaterialTheme.colors.background,
+        modifier = Modifier.fillMaxWidth(),
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(text = "Add To do ", textAlign = TextAlign.Center)
+                },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        navController.popBackStack()
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Return Back"
+                        )
+                    }
+                },
+            )
+        }
+
     ) {
         Column(
             verticalArrangement = Arrangement.Center,
@@ -97,6 +120,7 @@ fun CreateToDo(
                     .padding(vertical = 8.dp)
                     .clickable(onClick = viewModel::toggleMark)
             ) {
+
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,

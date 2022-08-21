@@ -29,7 +29,7 @@ fun AllTodoTab() {
         modifier = Modifier.padding(10.dp)
     ) { padding ->
         Column(modifier = Modifier.padding(padding)) {
-            Text(text = "Your Todos", style = MaterialTheme.typography.h6)
+            Text(text = "All Todos", style = MaterialTheme.typography.h6)
             Spacer(modifier = Modifier.height(8.dp))
             if (viewModel.todoState.value.isLoading) {
                 Box(modifier = Modifier.fillMaxSize()) {
@@ -40,20 +40,21 @@ fun AllTodoTab() {
                     )
                 }
             }
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) {
-                    items(viewModel.todoState.value.todos.size) { idx ->
-                        val todo = viewModel.todoState.value.todos[idx]
-                        ToDoCard(
-                            title = todo.title,
-                            description = todo.title,
-                            date = todo.createdAt,
-                            isCompleted = todo.isCompleted,
-                            onTap = {},
-                        )
-                    }
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                items(viewModel.todoState.value.todos.size) { idx ->
+                    val todo = viewModel.todoState.value.todos[idx]
+                    ToDoCard(
+                        title = todo.title,
+                        description = todo.title,
+                        date = todo.createdAt,
+                        isCompleted = todo.isCompleted,
+                        onTap = {},
+                        onDelete = {}
+                    )
+                }
 
             }
         }

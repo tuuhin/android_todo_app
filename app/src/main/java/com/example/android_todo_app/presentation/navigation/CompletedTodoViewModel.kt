@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.android_todo_app.domain.Resource
+import com.example.android_todo_app.domain.models.ToDoModel
 import com.example.android_todo_app.domain.repository.ToDoRepository
 import com.example.android_todo_app.presentation.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,8 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CompletedTodoViewModel @Inject constructor(
-  private  val toDoRepository: ToDoRepository
-):ViewModel() {
+    private val toDoRepository: ToDoRepository
+) : ViewModel() {
 
     private var _todoState = mutableStateOf(TodoState())
 
@@ -28,6 +29,31 @@ class CompletedTodoViewModel @Inject constructor(
     private val _uiEvent = MutableSharedFlow<UiEvent>()
 
     val eventFlow = _uiEvent.asSharedFlow()
+
+    fun updateTodo(todoModel: ToDoModel) {
+        viewModelScope.launch {
+            when (val updateTodo = toDoRepository.updateTodo(
+                todoModel.copy(isCompleted = false)
+            )) {
+                is Resource.Success ->
+                    _uiEvent.emit(UiEvent.ShowSnackBar(message = "updated todo: ${updateTodo.data!!.title}"))
+                is Resource.Error ->
+                    _uiEvent.emit(UiEvent.ShowSnackBar(updateTodo.message))
+                else -> {}
+            }
+        }
+    }
+
+    fun deleteTodo(todoId: Int) {
+        viewModelScope.launch {
+            when (val isDelete = toDoRepository.deleteTodo(todoId)) {
+                is Resource.Success -> _uiEvent.emit(UiEvent.ShowSnackBar(message = "Todo deleted"))
+                is Resource.Error -> _uiEvent.emit(UiEvent.ShowSnackBar(isDelete.message))
+                else -> {}
+            }
+        }
+    }
+
 
     fun loadCompletedTodos() {
         viewModelScope.launch {

@@ -3,10 +3,7 @@ package com.example.android_todo_app.presentation.screens
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.FabPosition
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.Scaffold
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
@@ -29,6 +26,10 @@ fun ViewTodos(
     val pagerState = rememberPagerState(pageCount = 3)
     Scaffold(
         bottomBar = { BottomNavigation(pagerState) },
+        topBar = {
+            TopAppBar(title = { Text(text = "Your Todos") })
+
+        },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
@@ -36,7 +37,7 @@ fun ViewTodos(
                 },
                 shape = RoundedCornerShape(50),
             ) {
-                Icon(Icons.Filled.Add, "add")
+                Icon(imageVector = Icons.Default.Add, contentDescription = "Add Item Route")
             }
         },
         floatingActionButtonPosition = FabPosition.End
