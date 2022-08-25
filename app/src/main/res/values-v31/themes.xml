@@ -2,6 +2,6 @@
 <resources>
     <style name="Theme.Android_ToDo_App" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:statusBarColor">@color/green_500</item>
-        <item name="android:windowBackground">#FFFFFF</item>
+        <item name="android:windowSplashScreenBackground">@color/teal_200</item>
     </style>
 </resources>
