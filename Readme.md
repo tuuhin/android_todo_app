@@ -30,11 +30,6 @@ The backend is used as a integration for retrofit and okhttp3 , the backend api 
 - [heroku-postgresql](https://www.heroku.com/postgres)
 - [Heroku](https://id.heroku.com/login)
 
-<iframe
-  src="https://calm-earth-06277.herokuapp.com/docs"
-  style="width:100%; height:300px;"
-></iframe>
-
 The backend is hosted at `Heroku` as `fastapi` comes with `swagger` fastapi has created [documentation](https://calm-earth-06277.herokuapp.com/docs) for the api.
 
 #### 📚 Tech stack & Libraries Used
