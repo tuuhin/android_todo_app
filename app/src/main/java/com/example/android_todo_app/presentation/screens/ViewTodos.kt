@@ -1,8 +1,6 @@
 package com.example.android_todo_app.presentation.screens
 
-
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -17,7 +15,6 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 
-
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun ViewTodos(
@@ -28,20 +25,18 @@ fun ViewTodos(
         bottomBar = { BottomNavigation(pagerState) },
         topBar = {
             TopAppBar(title = { Text(text = "Your Todos") })
-
         },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
                     navController.navigate(Routes.CreateToDo.route)
                 },
-                shape = RoundedCornerShape(50),
+                shape = MaterialTheme.shapes.medium,
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add Item Route")
             }
         },
         floatingActionButtonPosition = FabPosition.End
-
     )
     {
         HorizontalPager(state = pagerState, modifier = Modifier.padding(it)) { page ->

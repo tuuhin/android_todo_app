@@ -21,8 +21,8 @@ interface ToDoDao {
     @Query("DELETE FROM ToDoEntity WHERE id IN (:todosIds) ")
     suspend fun deleteTodos(todosIds: List<Int>)
 
-    @Query("DELETE FROM ToDoEntity WHERE id=:todoId")
-    suspend fun deleteTodoById(todoId: Int)
+    @Delete
+    suspend fun deleteTodoById(todo: ToDoEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addToDo(todo: ToDoEntity)

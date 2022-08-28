@@ -1,9 +1,7 @@
 package com.example.android_todo_app.presentation.screens
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.ButtonDefaults.elevation
@@ -28,6 +26,7 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun CreateToDo(
     navController: NavController,
+    modifier: Modifier = Modifier,
     viewModel: CreateTodoViewModel = hiltViewModel()
 ) {
     val scaffoldState = rememberScaffoldState()
@@ -40,7 +39,7 @@ fun CreateToDo(
     Scaffold(
         scaffoldState = scaffoldState,
         backgroundColor = MaterialTheme.colors.background,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         topBar = {
             TopAppBar(
                 title = {
@@ -82,7 +81,7 @@ fun CreateToDo(
                 onValueChange = viewModel::onTitleChange,
                 label = { Text(text = "Title") },
                 singleLine = true,
-                shape = RoundedCornerShape(20),
+                shape = MaterialTheme.shapes.medium,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
                     capitalization = KeyboardCapitalization.Sentences
@@ -96,10 +95,11 @@ fun CreateToDo(
                 )
             )
             TextField(
-                value = viewModel.desc.value, onValueChange = viewModel::onDescChange,
+                value = viewModel.desc.value,
+                onValueChange = viewModel::onDescChange,
                 label = { Text(text = "Description") },
                 singleLine = false,
-                shape = RoundedCornerShape(15),
+                shape = MaterialTheme.shapes.medium,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
                     capitalization = KeyboardCapitalization.Sentences
@@ -107,33 +107,26 @@ fun CreateToDo(
                 maxLines = 10,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(75.dp)
+                    .fillMaxHeight(.3f)
                     .padding(vertical = 5.dp),
                 colors = TextFieldDefaults.textFieldColors(
                     unfocusedIndicatorColor = Color.Transparent,
                     focusedIndicatorColor = Color.Transparent
                 )
             )
-
-            Box(
-                modifier = Modifier
-                    .padding(vertical = 8.dp)
-                    .clickable(onClick = viewModel::toggleMark)
-            ) {
-
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            )
+            {
+                Text(text = "Mark as Completed")
+                RadioButton(
+                    selected = viewModel.mark.value,
+                    onClick = viewModel::toggleMark
                 )
-                {
-                    Text(text = "Mark as Completed")
-                    RadioButton(
-                        selected = viewModel.mark.value,
-                        onClick = viewModel::toggleMark
-                    )
-                }
             }
+
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier
@@ -141,10 +134,10 @@ fun CreateToDo(
                     .padding(vertical = 8.dp)
             ) {
                 Button(
+                    contentPadding = PaddingValues(10.dp),
                     onClick = { navController.popBackStack() },
-                    contentPadding = PaddingValues(vertical = 15.dp),
-                    shape = RoundedCornerShape(20),
-                    modifier = Modifier.weight(4f),
+                    shape = MaterialTheme.shapes.medium,
+                    modifier = Modifier.weight(.4f),
                     colors = ButtonDefaults.buttonColors(
                         backgroundColor = Color.Transparent
                     ), border = BorderStroke(1.dp, MaterialTheme.colors.onSurface),
@@ -157,9 +150,9 @@ fun CreateToDo(
                 Spacer(modifier = Modifier.width(16.dp))
                 Button(
                     onClick = viewModel::addToDo,
-                    shape = RoundedCornerShape(20),
-                    contentPadding = PaddingValues(vertical = 15.dp),
-                    modifier = Modifier.weight(4f)
+                    shape = MaterialTheme.shapes.medium,
+                    modifier = Modifier.weight(.4f),
+                    contentPadding = PaddingValues(10.dp)
                 ) {
                     Text("Add", style = MaterialTheme.typography.subtitle1)
                 }

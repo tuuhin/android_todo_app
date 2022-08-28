@@ -26,9 +26,21 @@ class AllTodoViewModel @Inject constructor(
 
     private val _uiEvent = MutableSharedFlow<UiEvent>()
 
+    private val _isRefreshing = mutableStateOf(false)
+
+    val refreshing: State<Boolean> = _isRefreshing
+
     val eventFlow = _uiEvent.asSharedFlow()
 
-    fun loadAllTodos() {
+    init {
+        loadAllTodos()
+    }
+
+    fun refresh() {
+        loadAllTodos()
+    }
+
+    private fun loadAllTodos() {
         viewModelScope.launch {
             toDoRepository.getAllTodos().onEach { result ->
                 when (result) {

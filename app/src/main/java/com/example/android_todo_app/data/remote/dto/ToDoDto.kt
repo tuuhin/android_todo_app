@@ -1,6 +1,5 @@
 package com.example.android_todo_app.data.remote.dto
 
-
 import com.example.android_todo_app.domain.models.ToDoModel
 import com.squareup.moshi.Json
 import java.time.LocalDateTime

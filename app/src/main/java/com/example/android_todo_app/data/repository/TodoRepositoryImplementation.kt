@@ -121,10 +121,10 @@ class TodoRepositoryImplementation(
         }
     }
 
-    override suspend fun deleteTodo(todoId: Int): Resource<Int> {
+    override suspend fun deleteTodo(todo: ToDoModel): Resource<Int> {
         return try {
-            db.deleteTodoById(todoId)
-            api.deleteTodo(todoId)
+            db.deleteTodoById(todo.toEntity())
+            api.deleteTodo(todo.id)
             Resource.Success(data = 1)
         } catch (e: HttpException) {
             Resource.Error(message = e.message ?: "")
@@ -149,7 +149,7 @@ class TodoRepositoryImplementation(
             Resource.Error(message = "IO exception")
         } catch (e: Exception) {
             e.printStackTrace()
-            Resource.Error(message = "Unknown Error Occurred ")
+            Resource.Error(message = "Unknown Error ${e.message} Occurred  ${e.localizedMessage}")
         }
     }
 

@@ -30,13 +30,30 @@ class IncompleteTodoViewModel @Inject constructor(
 
     val eventFlow = _uiEvent.asSharedFlow()
 
+    private val _isRefreshing = mutableStateOf(false)
+
+    val refreshing: State<Boolean> = _isRefreshing
+
+    init {
+        loadInCompletedTodos()
+    }
+
+    fun refresh(){
+        loadInCompletedTodos()
+    }
+
     fun updateTodo(todoModel: ToDoModel) {
         viewModelScope.launch {
             when (val updateTodo = toDoRepository.updateTodo(
                 todoModel.copy(isCompleted = true)
             )) {
-                is Resource.Success ->
+                is Resource.Success -> {
                     _uiEvent.emit(UiEvent.ShowSnackBar(message = "updated todo: ${updateTodo.data!!.title}"))
+                    _todoState.value =
+                        _todoState.value.copy(todos = _todoState.value.todos.filter { toDo ->
+                            toDo.id != todoModel.id
+                        })
+                }
                 is Resource.Error ->
                     _uiEvent.emit(UiEvent.ShowSnackBar(updateTodo.message))
                 else -> {}
@@ -44,17 +61,24 @@ class IncompleteTodoViewModel @Inject constructor(
         }
     }
 
-    fun deleteTodo(todoId: Int) {
+    fun deleteTodo(todo: ToDoModel) {
         viewModelScope.launch {
-            when (val isDelete = toDoRepository.deleteTodo(todoId)) {
-                is Resource.Success -> _uiEvent.emit(UiEvent.ShowSnackBar(message = "Todo deleted"))
+            when (val isDelete = toDoRepository.deleteTodo(todo)) {
+                is Resource.Success -> {
+                    _uiEvent.emit(UiEvent.ShowSnackBar(message = "Todo deleted"))
+                    _todoState.value =
+                        _todoState.value.copy(todos = _todoState.value.todos.filter { toDo ->
+                            toDo.id != todo.id
+                        })
+//
+                }
                 is Resource.Error -> _uiEvent.emit(UiEvent.ShowSnackBar(isDelete.message))
                 else -> {}
             }
         }
     }
 
-    fun loadInCompletedTodos() {
+    private fun loadInCompletedTodos() {
         viewModelScope.launch {
             toDoRepository.getAllInCompletedTodos().onEach { result ->
                 when (result) {

@@ -7,15 +7,10 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-
 
 @Composable
 fun ToDoCard(
@@ -23,15 +18,14 @@ fun ToDoCard(
     description: String?,
     date: LocalDateTime,
     isCompleted: Boolean,
+    modifier: Modifier = Modifier,
+    onTap: () -> Unit = {},
+    onDelete: () -> Unit = {},
     enabled: Boolean? = false,
-    onTap: () -> Unit,
-    onDelete: () -> Unit
+    interactive: Boolean = false
 ) {
-    val formatter = remember {
-        DateTimeFormatter.ofPattern("EEE, d MMM yyyy HH:mm")
-    }
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp)
             .clickable(
@@ -41,57 +35,45 @@ fun ToDoCard(
         shape = MaterialTheme.shapes.medium,
         elevation = 2.dp,
         backgroundColor = MaterialTheme.colors.surface,
-        border = BorderStroke(1.dp, MaterialTheme.colors.onSurface)
+        border = BorderStroke(1.dp, MaterialTheme.colors.primary)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(
-                modifier = Modifier.weight(.7f)
+        if (interactive) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(2.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    title,
-                    style = MaterialTheme.typography.h6,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1
+                TodoCardDetails(
+                    title = title,
+                    description = description,
+                    date = date,
+                    modifier = Modifier.weight(0.75f)
                 )
-                Spacer(
-                    modifier = Modifier
-                        .height(2.dp)
+                RadioButton(
+                    modifier = Modifier.weight(.1f),
+                    selected = isCompleted,
+                    onClick = onTap
                 )
-                description?.let {
-                    Text(
-                        description,
-                        style = MaterialTheme.typography.caption,
-                        fontStyle = FontStyle.Italic
+                Spacer(modifier = Modifier.weight(.025f))
+                IconButton(
+                    modifier = Modifier.weight(.1f),
+                    onClick = onDelete
+                ) {
+                    Icon(
+                        Icons.Outlined.Delete,
+                        contentDescription = "Delete This Item",
+                        tint = MaterialTheme.colors.primary
                     )
                 }
-                Text(
-                    style = MaterialTheme.typography.subtitle2,
-                    text = date.format(formatter),
-                )
+                Spacer(modifier = Modifier.weight(.025f))
+
             }
-            Spacer(modifier = Modifier.weight(0.05f))
-            RadioButton(
-                modifier = Modifier.weight(.1f),
-                selected = isCompleted,
-                onClick = onTap
-            )
-            Spacer(modifier = Modifier.weight(0.05f))
-            IconButton(
-                modifier = Modifier.weight(.1f),
-                onClick = onDelete
-            ) {
-                Icon(
-                    Icons.Outlined.Delete,
-                    contentDescription = "Delete This Item",
-                    tint = MaterialTheme.colors.primary
-                )
-            }
+        } else {
+            TodoCardDetails(title = title, description = description, date = date)
         }
+
+
     }
 }

@@ -11,9 +11,10 @@ android {
     defaultConfig {
         applicationId "com.example.android_todo_app"
         minSdk 28
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
+        compileSdk 33
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -37,6 +38,8 @@ android {
             proguardFiles getDefaultProguardFile(
                     'proguard-android-optimize.txt'),
                     'proguard-rules.pro'
+
+            signingConfig signingConfigs.debug
         }
     }
     compileOptions {
@@ -85,8 +88,8 @@ dependencies {
     kapt "com.google.dagger:hilt-compiler:2.38.1"
     // navigation compose
     def nav_version = "2.5.1"
-    implementation("androidx.navigation:navigation-compose:$nav_version")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    implementation "androidx.navigation:navigation-compose:$nav_version"
+    implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
     //room
     def room_version = "2.4.3"
     implementation "androidx.room:room-runtime:$room_version"
@@ -97,5 +100,8 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
     implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.3'
+
+    //refresh swipe
+    implementation "com.google.accompanist:accompanist-swiperefresh:0.26.2-beta"
 
 }

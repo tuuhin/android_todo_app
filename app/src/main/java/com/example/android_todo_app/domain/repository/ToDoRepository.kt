@@ -15,7 +15,7 @@ interface ToDoRepository {
 
     suspend fun createTodo(todo: CreateTodoModel): Resource<ToDoModel>
 
-    suspend fun deleteTodo(todoId: Int): Resource<Int>
+    suspend fun deleteTodo(todo: ToDoModel): Resource<Int>
 
     suspend fun updateTodo(todo: ToDoModel): Resource<ToDoModel>
 
